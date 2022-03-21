@@ -1,0 +1,11 @@
+import java.util.HashMap;
+
+public class Mapa {
+    static HashMap<String, Persona> mapa = new HashMap<String, Persona>();
+    public static void mapa(Persona p){
+        mapa.put(p.dni,p);
+    }
+    public static boolean comprobar(String d){
+        return mapa.containsKey(d); 
+    }
+}

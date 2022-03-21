@@ -1,0 +1,73 @@
+import java.util.List;
+import java.util.Scanner;
+
+public class Manejo {
+    static Scanner s = new Scanner(System.in);
+    static String linea;
+    public static String dni(){
+        try{
+            linea=s.nextLine();
+            Integer.parseInt(linea.substring(0,7));
+        } catch (Exception e){
+            System.out.println("El formato del DNI son 8 números y una letra, por favor corríjalo.");
+            dni();
+        }
+        if(!Character.isLetter(linea.charAt(8))){
+            System.out.println("El formato del DNI son 8 números y una letra, por favor corríjalo.");
+            dni();
+        }
+        return linea;
+    }
+    public static String edad(){
+        try{
+            linea=s.nextLine();
+            Integer.parseInt(linea.substring(0,1));
+        } catch (Exception e){
+            System.out.println("La edad es un valor numérico.");
+            edad();
+        }
+        if(linea.length()>2){
+            System.out.println("La edad máxima permitida es de dos dígitos.");
+            edad();
+        }
+        return linea;
+    }
+    public static boolean letra(char c){
+        if(Character.isLetter(c)){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    public static boolean numero(char c){
+        if(c=='1'||c=='2'||c=='3'||c=='4'||c=='5'||c=='6'||c=='7'||c=='8'||c=='9'||c=='0'){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    public static String telefono(){
+        try{
+            linea=s.nextLine();
+            Integer.parseInt(linea);
+        } catch (Exception e){
+            System.out.println("El teléfono es un valor numérico.");
+            telefono();
+        }
+        if(linea.length()!=9){
+            System.out.println("El teléfono consta de 9 dígitos.");
+            telefono();
+        }
+        return linea;
+    }
+    public static void buscar(List<Persona> lp){
+        System.out.println("Por favor, introduzca el DNI a buscar:");
+        linea=dni();
+        for(Persona p : lp){
+            if(p.dni.equals(linea)){
+                System.out.println(p.datos());
+            }
+        }
+        Menu.menu();
+    }
+}

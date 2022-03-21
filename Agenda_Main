@@ -1,0 +1,120 @@
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Scanner;
+
+public class Menu {
+    static int contador=0;
+    static int posiciones[] = new int[6];
+    static int conpos=0;
+    static Persona p=new Persona();
+    static String[] nuevo = new String[6];
+    static List<Persona> lp = new ArrayList<Persona>();
+    static HashMap<String, Persona> mapa = new HashMap<String, Persona>();
+    private static Scanner s = new Scanner(System.in);
+    public static void main(String[] args) throws Exception {
+        try{
+            cargar();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        menu();
+    }
+    public static void menu() {
+        System.out.println("AGENDA de DATOS");
+        System.out.println("---------------");
+        System.out.println("¿Qué quiere hacer?");
+        System.out.println("1. Escribir nueva entrada");
+        System.out.println("2. Listar todas las entradas");
+        System.out.println("3. Buscar una entrada");
+        System.out.println("4. Modificar una entrada");
+        System.out.println("5. Elegir archivo de destino");
+        System.out.println("6. Salir");
+        switchmenu();
+    }
+    public static void switchmenu(){
+        switch(s.nextLine()){
+            case "1": agregar(); break;
+            case "2": mostrar(); break;
+            case "3": Manejo.buscar(lp); break;
+            case "4":
+            case "5": Archivo.extension(); break;
+            case "6": System.exit(0);
+            default: System.out.println("Por favor, elija una de las opciones disponibles."); switchmenu(); break;
+        }
+    }
+    public static void mapa(){     
+        mapa.put(p.dni(),p);
+        System.out.println(mapa);
+    }
+    public static void agregar(){
+        System.out.println("Por favor, introduzca el DNI:");
+        nuevo[0]=Manejo.dni();
+        System.out.println("Por favor, introduzca el nombre:");
+        nuevo[1]=s.nextLine();
+        System.out.println("Por favor, introduzca el apellido:");
+        nuevo[2]=s.nextLine();
+        System.out.println("Por favor, introduzca el teléfono:");
+        nuevo[3]=Manejo.telefono();
+        System.out.println("Por favor, introduzca el curso:");
+        nuevo[4]=s.nextLine();
+        System.out.println("Por favor, introduzca la edad:");
+        nuevo[5]=Manejo.edad();
+        if(comprobar(nuevo[0])){
+            System.out.println("El DNI introducido ya existe. ¿Desea reemplazar los valores asociados?");
+            System.out.println("1. Sí");
+            System.out.println("2. No");
+            switchrepe();
+        }else{
+            lp.add(new Persona(nuevo[0],nuevo[1],nuevo[2],nuevo[3],nuevo[4],nuevo[5]));
+            mapa();
+        }
+        contador++;
+        menu();
+    }
+    public static void switchrepe(){
+        switch(s.nextLine()){
+            case "1": lp.add(reemplazar(), new Persona(nuevo[0],nuevo[1],nuevo[2],nuevo[3],nuevo[4],nuevo[5])); System.out.println("Los datos han sido reemplazados."); break;
+            case "2": System.out.println("Se ignorarán los nuevos datos."); break;
+            default: System.out.println("Por favor, introduzca 1 para SÍ o 2 para NO."); switchrepe(); break;
+        }
+    }
+    public static boolean comprobar(String d){
+        System.out.println(mapa.containsKey(d));
+        return mapa.containsKey(d);
+    }
+    public static int reemplazar(){
+        int x=0;
+        for(Persona p:lp){
+            if(nuevo[0]==p.dni()){
+                x=lp.indexOf(p);
+            }
+        }
+        System.out.println(x);
+        return x;
+    }
+    public static void mostrar(){
+        for(Persona p : lp){
+            System.out.println(p.datos()+System.lineSeparator());
+        }
+        menu();
+    }
+    public static void cargar() throws IOException{
+        Archivo.leer();
+        posiciones[0]=0;
+        conpos=1;
+        for(String listacargar : Archivo.leer()){
+            for(int x=0;x<listacargar.length();x++){
+                if(listacargar.charAt(x)==';'){
+                    posiciones[conpos]=x;
+                    conpos++;
+                }
+            }
+            lp.add(new Persona(listacargar.substring(posiciones[0],posiciones[1]),listacargar.substring(posiciones[1]+1,posiciones[2]),listacargar.substring(posiciones[2]+1,posiciones[3]),listacargar.substring(posiciones[3]+1,posiciones[4]),listacargar.substring(posiciones[4]+1,posiciones[5]),listacargar.substring(posiciones[5]+1,listacargar.length())));
+        }
+    }
+    /*public static int reemplazo(String d){
+        
+    }*/
+}
